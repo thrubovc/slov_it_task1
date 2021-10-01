@@ -1,0 +1,21 @@
+- name: Install necessary packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - docker-ce
+    - acl ### the acl package is a necessary requirement for ansible to work when switching from an unprivileged to an unprivileged user
+
+- name: Create the deployment user account 
+  ansible.builtin.user:
+    name: deploy
+    groups: docker
+
+- name: check if community.docker is installed
+  shell: ansible-galaxy collection list | grep community.docker
+  register: IsCommunityDocker
+  changed_when: false
+
+- name: Install community docker_image module
+  command: ansible-galaxy collection install community.docker
+  when: IsCommunityDocker.rc !=0

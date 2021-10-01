@@ -1,0 +1,24 @@
+- name: Copy Dockerfile into /tmp
+  ansible.builtin.copy:
+    src: roles/build_deploy/docker_files
+    dest: "/tmp/{{ containerName | default('tomasko.eu') }}"
+    owner: deploy
+
+- name: Docker build
+  community.docker.docker_image:
+    build:
+      path: "/tmp/{{ containerName | default('tomasko.eu') }}/docker_files"
+    name: "{{ imageName | default('nginx') }}"
+    tag: "{{ tag | default('latest') }}"
+    source: build
+  become: true
+  become_user: deploy
+
+- name: Docker run
+  community.docker.docker_container:
+    image: "{{ imageName | default('nginx') }}:{{ tag | default('latest') }}"
+    name: "{{ containerName | default('tomasko.eu') }}"
+    ports:
+      - "{{ hostPort | default('12380') }}:80"
+  become: true
+  become_user: deploy

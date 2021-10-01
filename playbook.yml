@@ -1,0 +1,8 @@
+- hosts: localhost
+  connection: local
+  roles:
+    - role: prerequisites
+      become: true
+    - role: build_deploy
+      become_user: deploy
+      become: true
