@@ -1,6 +1,7 @@
 # Slovensko IT assignment for DevOps - found [here](https://gitlab.com/devops301/hireme/-/tree/master/task1)
 
 ## Assumptions:
+* `git` and `ansible` are installed
 * the user account used to run the playbook has sudo rights with password authentication, so we use the `-K` switch
 * the user account used to run the playbook can ssh to the target machine using a password, so we use the `-k` switch
 * there might already be an http server running on port 80 on the target machine, so we use another port - `12380`
