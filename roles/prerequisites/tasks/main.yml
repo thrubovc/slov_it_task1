@@ -11,10 +11,12 @@
     name: deploy
     groups: docker
 
-- name: check if community.docker is installed
-  shell: ansible-galaxy collection list | grep community.docker
-  register: IsCommunityDocker
-  changed_when: false
+### Apparently this is not necessary as Ansible won't even start executing the playbook if it doesn't recognize a non-existent module
+### This needs to be installed manually beforehand
+#- name: check if community.docker is installed
+#  shell: ansible-galaxy collection list | grep community.docker
+#  register: IsCommunityDocker
+#  changed_when: false
 
 - name: Install community docker_image module
   command: ansible-galaxy collection install community.docker
