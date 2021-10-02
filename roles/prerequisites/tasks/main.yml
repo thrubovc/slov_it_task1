@@ -5,13 +5,32 @@
     baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
     gpgkey: https://download.docker.com/linux/centos/gpg
     gpgcheck: yes
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: Install containerd
+  ansible.builtin.package:
+    name: "https://download.docker.com/linux/centos/8/x86_64/stable/Packages/containerd.io-1.4.9-3.1.el8.x86_64.rpm"
+    state: latest
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: Add Docker-CE stable repo
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu focal stable
+    state: present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
 
 - name: Install necessary packages
   ansible.builtin.package:
     name: "{{ item }}"
     state: latest
   loop:
-    - https://download.docker.com/linux/centos/8/x86_64/stable/Packages/containerd.io-1.4.9-3.1.el8.x86_64.rpm
     - docker-ce
     - python3-pip
     - acl ### the acl package is a necessary requirement for ansible to work when switching from an unprivileged to an unprivileged user
@@ -28,7 +47,7 @@
     executable: pip3
 
 
-- name: Create the deployment user account 
+- name: Create the deployment user account
   ansible.builtin.user:
     name: deploy
     groups: docker
