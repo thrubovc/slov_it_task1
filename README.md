@@ -8,8 +8,8 @@
 * the ansible playbook is executed on the target machine
 
 ## Instructions:
-`ansible-galaxy collection install community.docker`
-`git clone https://github.com/thrubovc/slov_it_task1.git && cd slov_it_task1`
+`ansible-galaxy collection install community.docker`<br>
+`git clone https://github.com/thrubovc/slov_it_task1.git && cd slov_it_task1`<br>
 `ansible-playbook -Kk playbook.yml`
 
 Alternatively, the following variables are available: `containerName`, `imageName`, `tag`, `hostPort`. All of them are optional. You can specify one or multiple custom values by using the `-e` flag when running the playbook with each variable, example:
