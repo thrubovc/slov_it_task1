@@ -1,10 +1,32 @@
+- name: Add Docker-CE stable repo
+  yum_repository:
+    name: docker-ce-stable
+    description: Docker CE Stable Repo
+    baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+    gpgkey: https://download.docker.com/linux/centos/gpg
+    gpgcheck: yes
+
 - name: Install necessary packages
   ansible.builtin.package:
     name: "{{ item }}"
     state: latest
   loop:
+    - https://download.docker.com/linux/centos/8/x86_64/stable/Packages/containerd.io-1.4.9-3.1.el8.x86_64.rpm
     - docker-ce
+    - python3-pip
     - acl ### the acl package is a necessary requirement for ansible to work when switching from an unprivileged to an unprivileged user
+
+- name: Start docker now
+  systemd:
+    name: docker
+    state: started
+    enabled: true
+
+- name: install the requests module
+  pip:
+    name: ['requests', 'docker']
+    executable: pip3
+
 
 - name: Create the deployment user account 
   ansible.builtin.user:
@@ -17,7 +39,7 @@
 #  shell: ansible-galaxy collection list | grep community.docker
 #  register: IsCommunityDocker
 #  changed_when: false
-
-- name: Install community docker_image module
-  command: ansible-galaxy collection install community.docker
-  when: IsCommunityDocker.rc !=0
+#
+#- name: Install community docker_image module
+#  command: ansible-galaxy collection install community.docker
+#  when: IsCommunityDocker.rc !=0
